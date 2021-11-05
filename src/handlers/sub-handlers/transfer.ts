@@ -53,19 +53,27 @@ export class TransferHandler {
       return transfer;
     });
 
-    await Promise.all(
-      transfers.map(async transfer => TransferHandler.saveTransfer(await transfer))
-    );
+    try{
+      await Promise.all(
+        transfers.map(async transfer => TransferHandler.saveTransfer(await transfer))
+      );
+    } catch (error) {
+      logger.error(error.message);
+    }
   }
   
   static async saveTransfer(transfer: Transfer) {
     let existTransfers = await Transfer.getByBlockId(transfer.blockId);
-    if (existTransfers.filter(t => t.id !== transfer.id && t.fromId === transfer.fromId && t.toId === transfer.toId).length) {
-      return;
-    };
+    if (existTransfers != undefined) {
+      if (existTransfers.filter(t => t.id !== transfer.id && t.fromId === transfer.fromId && t.toId === transfer.toId).length) {
+        return;
+      } else {
+        // logger.info(`not empty and also not exist`)
+      }
+    }
 
     try {
-      logger.info(`Save transfer: ${transfer.fromId} to ${transfer.toId}`);
+      // logger.info(`Save transfer: ${transfer.fromId} to ${transfer.toId}`);
       await transfer.save();
     } catch (error) {
       logger.error(error.message);

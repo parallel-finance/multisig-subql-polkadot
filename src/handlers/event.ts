@@ -75,6 +75,7 @@ export class EventHandler {
       data: string;
     }): Promise<void> => {
       const { id, index, section, method, data } = source;
+      logger.info(`Saving event ${id} ${index} ${section} ${method}`);
       const event = new Event(id);
 
       event.index = index;
@@ -100,7 +101,7 @@ export class EventHandler {
       .map((item, index) => {
         const { event } = item;
 
-        if (event.method === 'ExtrinsicSuccess') {
+        if (event.method !== 'Transfer') {
           return null;
         }
 

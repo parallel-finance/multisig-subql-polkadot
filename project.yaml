@@ -3,11 +3,12 @@ description: ""
 repository: ""
 schema: ./schema.graphql
 network:
-  endpoint: wss://polkadot.api.onfinality.io/public-ws
+  # endpoint: wss://polkadot.api.onfinality.io/public-ws
+  endpoint: wss://pub.elara.patract.io/polkadot
 dataSources:
   - name: main
     kind: substrate/Runtime
-    startBlock: 7542500
+    startBlock: 7564436
     mapping:
       handlers:
         - handler: handleBlock
@@ -16,6 +17,6 @@ dataSources:
           kind: substrate/EventHandler
           filter:
             module: balances
-            method: Deposit
+            method: Transfer
         - handler: handleCall
           kind: substrate/CallHandler
