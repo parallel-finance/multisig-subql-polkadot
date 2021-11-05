@@ -9,7 +9,8 @@
         "test": "jest",
         "start": "docker-compose pull && docker-compose up --remove-orphans",
         "format": "prettier ./src/**/*.ts --config='./prettier.config.js'  --write",
-        "codegen": "./node_modules/.bin/subql codegen"
+        "codegen": "./node_modules/.bin/subql codegen",
+        "reload": "rm -rf .data && docker container prune && yarn codegen && yarn build && yarn start"
     },
     "homepage": "https://github.com/parallel-finance/multisig-subql-polkadot",
     "repository": "github:subquery/parallel-finance/multisig-subql-polkadot",

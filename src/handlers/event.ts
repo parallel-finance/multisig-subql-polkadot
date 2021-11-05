@@ -116,6 +116,10 @@ export class EventHandler {
 
     await Promise.all(records);
 
-    await TransferHandler.checkTransfer(this.event);
+    try{
+      await TransferHandler.checkTransfer(this.event);
+    } catch (error) {
+      logger.error(error.message);
+    }
   }
 }
