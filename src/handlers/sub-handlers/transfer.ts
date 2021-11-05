@@ -12,13 +12,8 @@ enum FeePosition {
 
 export class TransferHandler {
   static async checkTransfer({ event, block: { events, timestamp, block } }: SubstrateEvent) {
-    logger.info(`Input event : ${event}`)
     const transferInfos = events.filter(item => item.event.method === 'Transfer');
-    transferInfos.forEach(async (transferInfo) => {
-      if (!transferInfo) {
-        return;
-      }
-
+    let transfers: Promise<Transfer>[] = await transferInfos.map(async (transferInfo) => {
       const { data, section } = transferInfo.event;
       const [from, to, amount] = JSON.parse(data.toString());
       // logger.info(`Solve ${block.header.number}-${transferInfo.event}`);
@@ -55,17 +50,25 @@ export class TransferHandler {
         return total;
       }, BigInt(0));
 
-      let transfers = await Transfer.getByBlockId(transfer.blockId);
-      if (transfers.filter(t => t.id !== transfer.id && t.fromId === transfer.fromId && t.toId === transfer.toId).length) {
-        return;
-      };
+      return transfer;
+    });
 
-      try {
-        // logger.info(`Save Transfer ${transfer.fromId}`);
-        await transfer.save();
-      } catch (error) {
-        logger.error(error.message);
-      }
-    })
+    await Promise.all(
+      transfers.map(async transfer => TransferHandler.saveTransfer(await transfer))
+    );
+  }
+  
+  static async saveTransfer(transfer: Transfer) {
+    let existTransfers = await Transfer.getByBlockId(transfer.blockId);
+    if (existTransfers.filter(t => t.id !== transfer.id && t.fromId === transfer.fromId && t.toId === transfer.toId).length) {
+      return;
+    };
+
+    try {
+      logger.info(`Save transfer: ${transfer.fromId} to ${transfer.toId}`);
+      await transfer.save();
+    } catch (error) {
+      logger.error(error.message);
+    }
   }
 }
