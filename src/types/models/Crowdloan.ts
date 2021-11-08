@@ -12,11 +12,13 @@ export class Crowdloan implements Entity {
 
     public id: string;
 
-    public fromId?: string;
+    public proxy: string;
 
-    public toId?: string;
+    public multisig: string;
 
     public blockHeight: number;
+
+    public blockId: string;
 
     public paraId: number;
 
@@ -55,20 +57,6 @@ export class Crowdloan implements Entity {
         }
     }
 
-
-    static async getByFromId(fromId: string): Promise<Crowdloan[] | undefined>{
-      
-      const records = await store.getByField('Crowdloan', 'fromId', fromId);
-      return records.map(record => Crowdloan.create(record));
-      
-    }
-
-    static async getByToId(toId: string): Promise<Crowdloan[] | undefined>{
-      
-      const records = await store.getByField('Crowdloan', 'toId', toId);
-      return records.map(record => Crowdloan.create(record));
-      
-    }
 
     static async getByBlockHeight(blockHeight: number): Promise<Crowdloan[] | undefined>{
       

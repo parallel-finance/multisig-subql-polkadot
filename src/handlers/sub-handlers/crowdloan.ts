@@ -20,7 +20,7 @@ const checkTransactionInsideProxy = (sectionFilter: string, methodFilter: string
     if (!checkTransaction("proxy", "proxy", call)) return false;
     const addr = call.args[0].toString();
     if (addr !== MULTISIG_ADDR) {
-        logger.debug("Found proxy address: " + addr + ", expected: " + MULTISIG_ADDR);
+        // logger.debug("Found proxy address: " + addr + ", expected: " + MULTISIG_ADDR);
         return false;
     }
     const insideCall = call.args[2] as IExtrinsic;
@@ -29,14 +29,12 @@ const checkTransactionInsideProxy = (sectionFilter: string, methodFilter: string
 
 export class CrowdloanHandler {
     static async handleCrowdloan(extrinsic: SubstrateExtrinsic) {
-        logger.info(`start handling crowdloan...`)
         const calls = extrinsic.extrinsic.args[0] as Vec<IExtrinsic>;
         if (
             calls.length !== 2 ||
             !checkTransaction("system", "remark", calls[0]) ||
             !checkTransaction("balances", "transfer", calls[1])
         ) {
-            logger.info(`not supported crowdloan`)
             return;
         }
         
@@ -48,7 +46,6 @@ export class CrowdloanHandler {
                 args: [addressRaw, amountRaw],
             },
         ] = calls.toArray();
-        // logger.info(`Found remark: ${remarkRaw.toString()}`);
         if (addressRaw.toString() !== MULTISIG_ADDR) {
             logger.info(`Crowdloan found address: ${addressRaw.toString()}, expected: ${MULTISIG_ADDR}`);
             return;
@@ -58,8 +55,10 @@ export class CrowdloanHandler {
 
         const crowdloanRecord = Crowdloan.create({
             id: extrinsic.extrinsic.hash.toString(),
-
+            proxy: PROXY_ADDR,
+            multisig: addressRaw.toString(),
             blockHeight: extrinsic.block.block.header.number.toNumber(),
+            blockId: extrinsic.block.block.hash.toString(),
             paraId: parseInt(paraId),
             account: extrinsic.extrinsic.signer.toString(),
             amount: amountRaw.toString(),
@@ -118,6 +117,7 @@ export class CrowdloanHandler {
             entities.map((entity) => {
                 entity.transactionExecuted = true;
                 entity.executedBlockHeight = extrinsic.block.block.header.number.toNumber();
+                entity.blockId = extrinsic.block.block.hash.toString();
                 return entity.save();
             })
         );

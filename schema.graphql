@@ -76,7 +76,10 @@ type Transfer @entity {
 
 type Crowdloan @entity {
   id: ID!
+  proxy: String!
+  multisig: String!
   blockHeight: Int! @index
+  blockId: String!
   paraId: Int! @index
   account: String!
   amount: String!
