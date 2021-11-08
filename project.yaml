@@ -8,7 +8,7 @@ network:
 dataSources:
   - name: main
     kind: substrate/Runtime
-    startBlock: 7567149
+    startBlock: 7567019
     mapping:
       handlers:
         - handler: handleBlock
