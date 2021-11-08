@@ -1,5 +1,5 @@
 import { SubstrateBlock, SubstrateEvent, SubstrateExtrinsic } from '@subql/types';
-import { BlockHandler, ExtrinsicHandler, EventHandler } from '../handlers';
+import { BlockHandler, ExtrinsicHandler, EventHandler, BatchAllHandler } from '../handlers';
 
 export async function handleBlock(block: SubstrateBlock): Promise<void> {
   const handler = new BlockHandler(block);
@@ -18,3 +18,9 @@ export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
 
   await handler.save();
 }
+
+export async function handleCrowdloan(extrinsic: SubstrateExtrinsic): Promise<void> {
+  const batchAllHandler = new BatchAllHandler(extrinsic);
+  
+  await batchAllHandler.save();
+};

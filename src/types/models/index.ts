@@ -14,3 +14,5 @@ export {Token} from "./Token"
 
 export {Transfer} from "./Transfer"
 
+export {Crowdloan} from "./Crowdloan"
+
