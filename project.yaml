@@ -22,3 +22,6 @@ dataSources:
           kind: substrate/CallHandler
         - handler: handleBatchCall
           kind: substrate/CallHandler
+          filter:
+            module: utility
+            method: batchAll
