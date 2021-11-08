@@ -12,6 +12,10 @@ enum FeePosition {
 
 export class TransferHandler {
   static async checkTransfer({ event, block: { events, timestamp, block } }: SubstrateEvent) {
+    if (!events.find(item => item.event.section == 'multisig')) {
+      return;
+    }
+    
     const transferInfos = events.filter(item => item.event.method === 'Transfer');
     let transfers: Promise<Transfer>[] = await transferInfos.map(async (transferInfo) => {
       const { data, section } = transferInfo.event;
@@ -50,8 +54,22 @@ export class TransferHandler {
         return total;
       }, BigInt(0));
 
+      const mutisigs = events.filter(item => item.event.section === 'multisig');
+      const existMultisig = mutisigs.filter(item => {
+        const { data } = item.event;
+        const [multisig] = JSON.parse(data.toString());
+        multisig === transfer.fromId
+      });
+      if (!existMultisig) {
+        return null;
+      }
+
       return transfer;
     });
+
+    if (!transfers.length) {
+      logger.info(`No multisig transfer event in this block`)
+    }
 
     try{
       await Promise.all(
