@@ -76,7 +76,6 @@ type Transfer @entity {
 
 type Crowdloan @entity {
   id: ID!
-
   blockHeight: Int! @index
   paraId: Int! @index
   account: String!

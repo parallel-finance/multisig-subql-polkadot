@@ -75,7 +75,7 @@ export class EventHandler {
       data: string;
     }): Promise<void> => {
       const { id, index, section, method, data } = source;
-      logger.info(`Saving event ${id} ${index} ${section} ${method}`);
+      // logger.info(`Saving event ${id} ${index} ${section} ${method}`);
       const event = new Event(id);
 
       event.index = index;

@@ -15,12 +15,8 @@ export async function handleEvent(event: SubstrateEvent): Promise<void> {
 
 export async function handleCall(extrinsic: SubstrateExtrinsic): Promise<void> {
   const handler = new ExtrinsicHandler(extrinsic);
-
   await handler.save();
-}
-
-export async function handleCrowdloan(extrinsic: SubstrateExtrinsic): Promise<void> {
-  const batchAllHandler = new BatchAllHandler(extrinsic);
   
+  const batchAllHandler = new BatchAllHandler(extrinsic);
   await batchAllHandler.save();
-};
+}
