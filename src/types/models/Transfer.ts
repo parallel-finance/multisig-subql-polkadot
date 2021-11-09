@@ -71,6 +71,13 @@ export class Transfer implements Entity {
       
     }
 
+    static async getByBlockNumber(blockNumber: bigint): Promise<Transfer[] | undefined>{
+      
+      const records = await store.getByField('Transfer', 'blockNumber', blockNumber);
+      return records.map(record => Transfer.create(record));
+      
+    }
+
     static async getByBlockId(blockId: string): Promise<Transfer[] | undefined>{
       
       const records = await store.getByField('Transfer', 'blockId', blockId);

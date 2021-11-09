@@ -20,8 +20,12 @@ dataSources:
             method: Transfer
         - handler: handleCall
           kind: substrate/CallHandler
+          filter:
+            module: multisig
+            success: true
         - handler: handleBatchCall
           kind: substrate/CallHandler
           filter:
             module: utility
             method: batchAll
+            success: true
