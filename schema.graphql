@@ -68,7 +68,7 @@ type Transfer @entity {
   amount: BigInt
   timestamp: Date
   fee: BigInt
-  blockNumber: BigInt
+  blockNumber: BigInt @index
   # TODO add index field
 
   block: Block #create relation to block

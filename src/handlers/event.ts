@@ -101,7 +101,7 @@ export class EventHandler {
       .map((item, index) => {
         const { event } = item;
 
-        if (event.method === 'ExtrinsicSuccess') {
+        if (event.method !== 'Transfer') {
           return null;
         }
 
