@@ -12,7 +12,7 @@ enum FeePosition {
 
 export class TransferHandler {
   static async checkTransfer({ event, block: { events, timestamp, block } }: SubstrateEvent) {
-    if (!events.find(item => item.event.section == 'multisig')) {
+    if (!events.find(item => item.event.method == 'MultisigExecuted')) {
       return;
     }
     
@@ -54,7 +54,7 @@ export class TransferHandler {
         return total;
       }, BigInt(0));
 
-      const mutisigs = events.filter(item => item.event.section === 'multisig');
+      const mutisigs = events.filter(item => item.event.method === 'MultisigExecuted');
       const existMultisig = mutisigs.filter(item => {
         const { data } = item.event;
         const [multisig] = JSON.parse(data.toString());
